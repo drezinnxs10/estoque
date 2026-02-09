@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Controle de Estoque Profissional</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            background: '#DC2626',
+            secondary: '#14532D'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen">
+
+  <div class="max-w-7xl mx-auto p-4 md:p-6">
+
+    
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-6">
+      <h1 class="text-2xl md:text-3xl font-bold">Controle de Estoque</h1>
+      <div class="flex flex-wrap gap-2">
+        <button onclick="exportarExcel()"
+          class="bg-secondary text-white px-4 py-2 rounded">
+          ⬇ Excel
+        </button>
+        <button onclick="toggleDarkMode()"
+          class="bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded">
+          🌙
+        </button>
+      </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow">
+        <p class="text-sm text-gray-500">Produtos</p>
+        <h2 id="cardProdutos" class="text-2xl font-bold">0</h2>
+      </div>
+      <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow">
+        <p class="text-sm text-gray-500">Peso Total (KG)</p>
+        <h2 id="cardPeso" class="text-2xl font-bold">0</h2>
+      </div>
+      <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow">
+        <p class="text-sm text-gray-500">Estoque Baixo</p>
+        <h2 id="cardAlerta" class="text-2xl font-bold text-red-500">0</h2>
+      </div>
+    </div>
+
+    <!-- Busca e filtro -->
+    <div class="flex flex-col md:flex-row gap-3 mb-4">
+      <input id="busca" type="text" placeholder="Buscar produto..."
+        class="p-2 rounded border w-full md:w-1/2 dark:bg-gray-700"
+        oninput="renderizarTudo()">
+
+      <select id="filtro" onchange="renderizarTudo()"
+        class="p-2 rounded border w-full md:w-1/4 dark:bg-gray-700">
+        <option value="todos">Todos</option>
+        <option value="baixo">Estoque baixo</option>
+      </select>
+    </div>
+
+    <!-- Formulário -->
+    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow mb-6">
+      <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+        <input id="produto" placeholder="Produto"
+          class="p-2 rounded border dark:bg-gray-700">
+
+        <input id="quantidade" type="number" step="0.01" min="0"
+          placeholder="Quantidade"
+          class="p-2 rounded border dark:bg-gray-700">
+
+        <select id="unidade"
+          class="p-2 rounded border dark:bg-gray-700">
+          <option value="kg">KG</option>
+          <option value="g">G</option>
+        </select>
+
+        <button onclick="adicionarProduto()"
+          class="bg-background text-white rounded px-4 py-2">
+          Adicionar
+        </button>
+      </div>
+    </div>
+
+    <!-- Tabela -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow mb-6 overflow-x-auto">
+      <table class="w-full text-sm md:text-base">
+        <thead class="bg-gray-200 dark:bg-gray-700">
+          <tr>
+            <th class="p-2 text-left">Produto</th>
+            <th class="p-2 text-center">Quantidade (KG)</th>
+            <th class="p-2 text-center">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="listaEstoque"></tbody>
+      </table>
+    </div>
+
+    <!-- Gráfico -->
+    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow mb-6">
+      <h2 class="text-xl font-bold mb-4">Estoque</h2>
+      <canvas id="graficoEstoque"></canvas>
+    </div>
+
+    <!-- Histórico -->
+    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow">
+      <h2 class="text-xl font-bold mb-4">Histórico de Movimentações</h2>
+      <ul id="historico" class="text-sm space-y-2 max-h-64 overflow-y-auto"></ul>
+    </div>
+
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
